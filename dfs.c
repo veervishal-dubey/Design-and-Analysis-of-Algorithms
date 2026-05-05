@@ -1,40 +1,26 @@
-#include <stdio.h>
-int count = 1;
-
-int stack[100];
-
-int graph[10][10];
-
-int visited[100];
+#include <iostream> 
+#define MAX 10
+using namespace std;
+int adjacency[MAX][MAX];
+int visited[MAX]={0};
 
 void dfs(int start, int n)
 {
-
-        visited[start]=count++;
-        printf("%d ", start);
-        for (int i =0; i<n;i++)
+    visited[start]=1;
+    cout<<start<<" ";
+    for (int neighbour=0; neighbour<n;neighbour++)
+    {
+        if (adjacency[start][neighbour]!=0 and visited[neighbour]!=1)
         {
-                if(graph[start][i]!=0 && !visited[i])
-                        dfs(i,n);
+            dfs(neighbour, n);
         }
+    }
+
 }
 
 int main()
 {
-
-int n;
-
-printf("Enter the number of vertex: ");
-scanf("%d",&n);
-printf("Enter the adjacenecy matrix\n");
-for (int i=0; i<n;i++)
-{
-        for (int j = 0 ; j<n ; j++)
-                scanf("%d", &graph[i][j]);
-}
-
-dfs(0,n);
-
-
-return 0;
+    // enter adjacency matrix using nested for loops. n is the size of the adjacency matrix
+    // dfs(0,n);
+    return 0;
 }
