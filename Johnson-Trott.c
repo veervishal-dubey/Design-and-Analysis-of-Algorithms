@@ -1,81 +1,66 @@
-#include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+using namespace std; 
 
-int findMobile(int nums[], int dir[], int n)
+int findMobile(vector<int>array, vector<int> direction)
 {
-int mobile =0;
-int index=-1; 
-
-for (int i =0; i<n; i++)
-	{
-		if (dir[i]==-1 && i!=0 && nums[i]>nums[i-1] && nums[i]>mobile)
-			{
-				mobile=nums[i];
-				index=i;
-			}
-		if (dir[i]==1 && i!=n-1 && nums[i]>nums[i+1] && nums[i]>mobile)
-			{
-				mobile=nums[i];
-				index=i;
-			}
-		
-	}
-	return index;
+    int mobileIndex=-1; 
+    for (int i=0; i<array.size();i++)
+    {
+        if (i>0 && direction[i]==-1 && array[i]>array[i-1])
+        {    if (mobileIndex==-1||array[i]>array[mobileIndex])
+                mobileIndex=i;
+        }
+       else if (i<array.size()-1 && direction[i]==1 && array[i]>array[i+1])
+        {
+            if(mobileIndex==-1 || array[i]>array[mobileIndex])
+                mobileIndex=i;
+    
+        }
+    }     
+    return mobileIndex;
 }
 
-void printPermutation(int nums[], int n)
+void printPermuatation(vector <int> array)
 {
-	for (int i=0; i<n; i++)
-	{
-		printf("%d",nums[i]);
-	}
-	printf(" ");
+    for (int i=0; i<array.size();i++)
+        cout<<array[i]<<" ";
+    cout<<"\n";
 }
 
-void swap(int *num1, int *num2)
+void generatePermuation(vector <int> &array, vector<int> &direction)
 {
-	int temp=*num1;
-	*num1=*num2;
-	*num2=temp;
+    printPermuatation(array);
+    while (true)
+    {
+        int largest=findMobile(array, direction);
+        if (largest==-1)
+            break;
+        int largestNum=array[largest];
+        int swapIdx=largest+direction[largest];
+        swap(array[largest], array[swapIdx]);
+        swap(direction[largest],direction[swapIdx]);
+        for (int i=0; i<array.size();i++)
+        {
+            if (array[i]>largestNum)
+                direction[i]=-1*direction[i];
+        }
+        printPermuatation(array);
+    }
 }
 
 int main()
 {
-
-	int n;
-	printf("Enter the number of elements: ");
-	scanf("%d", &n);
-
-	int nums[n];
-	int direction[n];
-
-	for (int i=0; i<n;i++)
-	{
-		nums[i]=i+1;
-		direction[i]=-1;
-	}
-	
-	printPermutation(nums, n);
-
-	while (1)
-	{
-		int largest=findMobile(nums, direction, n);
-		if (largest==-1)
-			break;
-		int mobile_num=nums[largest];	
-		int swapIndex=largest+direction[largest];
-
-		swap (&nums[largest], &nums[swapIndex]);
-		swap (&direction[largest], &direction[swapIndex]);
-
-		for (int i=0; i<n; i++)
-		{
-			if (nums[i]>mobile_num)
-			{
-				direction[i]=-direction[i];
-			}
-		}
-		printPermutation(nums, n);
-	}
-	return 0;
+    vector<int>nums;
+    vector<int>direction;
+    cout<<"Enter the number of elements: ";
+    int n;
+    cin>>n;
+    for (int i=0; i<n;i++)
+    {
+        nums.push_back(i+1);
+        direction.push_back(-1);
+    }
+    generatePermuation(nums, direction);
 }
-
